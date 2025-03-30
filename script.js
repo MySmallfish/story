@@ -2,6 +2,7 @@ let current = 0;
 let autoPlayTimer;
 let totalScenes = 9;
 let audio = document.getElementById('backgroundAudio');
+let firstSceneShown = false;
 
 // Start the story when the start button is clicked
 function startStory() {
@@ -16,10 +17,16 @@ function startStory() {
   
   // Start the automatic scene transitions
   nextScene();
-  startAutoPlay();
+  
+  // Set a special timeout for the first scene (10 seconds)
+  setTimeout(() => {
+    firstSceneShown = true;
+    nextScene();
+    startAutoPlay();
+  }, 10000); // 10 seconds for the first scene
 }
 
-// Function to automatically transition to the next scene every 5 seconds
+// Function to automatically transition to the next scene every 10 seconds
 function startAutoPlay() {
   autoPlayTimer = setInterval(() => {
     // If we've reached the last scene, stop the timer
@@ -29,7 +36,7 @@ function startAutoPlay() {
     }
     
     nextScene();
-  }, 5000); // 5 seconds interval
+  }, 10000); // 10 seconds interval
 }
 
 // Function to transition to the next scene with animation
@@ -47,6 +54,11 @@ function nextScene() {
   
   // If we've reached the end, do nothing
   if (!next) {
+    return;
+  }
+  
+  // If this is the first scene and we haven't shown it for 10 seconds yet, don't proceed
+  if (current === 1 && !firstSceneShown) {
     return;
   }
   
